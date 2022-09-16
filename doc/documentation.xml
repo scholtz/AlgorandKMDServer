@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AlgorandKMDServer</name>
+    </assembly>
+    <members>
+        <member name="T:AlgorandKMDServer.Controllers.KMDController">
+            <summary>
+            KMD controller
+            </summary>
+        </member>
+        <member name="F:AlgorandKMDServer.Controllers.KMDController.LastRun">
+            <summary>
+            Last run of the addpartkey method. This method is cpu sensitive and might cause DDOS if users are performing too fast requests.
+            </summary>
+        </member>
+        <member name="M:AlgorandKMDServer.Controllers.KMDController.#ctor(Microsoft.Extensions.Logging.ILogger{AlgorandKMDServer.Controllers.KMDController})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="logger"></param>
+        </member>
+        <member name="M:AlgorandKMDServer.Controllers.KMDController.Status">
+            <summary>
+            Show current kmd status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AlgorandKMDServer.Controllers.KMDController.Addpartkey(System.Int32,System.Int32,System.String)">
+            <summary>
+            Creates participation key for this server. User can sign the request to use this participation key.
+            
+            This method is cpu sensitive and might cause DDOS if users are performing too fast requests. It is secured with limit of 1000000 rounds, and 10 second global call limit.
+            </summary>
+            <param name="roundFirstValid">First valid round for participation</param>
+            <param name="roundLastValid">Last valid round for participation</param>
+            <param name="address"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AlgorandKMDServer.Model.ParticipationKey">
+            <summary>
+            Return of the create part key method
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationKey.ParticipationId">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationKey.ParentAddress">
+            <summary>
+            Address
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationKey.SelectionKey">
+            <summary>
+            SelectionKey
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationKey.VoteKey">
+            <summary>
+            Voting key
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationKey.StateProofKey">
+            <summary>
+            State proof key
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationKey.FirstRound">
+            <summary>
+            First round
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationKey.LastRound">
+            <summary>
+            Last round
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationKey.VoteKeyDilution">
+            <summary>
+            Key dilution
+            </summary>
+        </member>
+        <member name="T:AlgorandKMDServer.Model.Status">
+            <summary>
+            Status of the kmd server
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Status.Time">
+            <summary>
+            Time of the snapshot
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Status.ActiveKeys">
+            <summary>
+            Active participation keys
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Status.ActiveKeysRoundsSum">
+            <summary>
+            Sum of last round minus first round of all active keys
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Status.AllKeysCount">
+            <summary>
+            Count of generated participation keys
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Status.AllKeysRoundsSum">
+            <summary>
+            Sum of last round minus first round of all keys
+            </summary>
+        </member>
+    </members>
+</doc>
