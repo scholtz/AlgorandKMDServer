@@ -1,3 +1,4 @@
+using AlgorandAuthentication;
 using AlgorandKMDServer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -118,7 +119,7 @@ namespace AlgorandKMDServer.Controllers
         /// <param name="roundLastValid">Last valid round for participation</param>
         /// <param name="address"></param>
         /// <returns></returns>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = AlgorandAuthenticationHandler.ID)]
         [ProducesResponseType(typeof(ParticipationKey), 200)]
         [HttpGet("addpartkey")]
         public ActionResult<ParticipationKey> Addpartkey(int roundFirstValid, int roundLastValid, string address)
@@ -152,7 +153,7 @@ namespace AlgorandKMDServer.Controllers
                     throw new Exception("Address is invalid");
                 }
                 if (roundLastValid <= roundFirstValid) throw new Exception("roundLastValid is lower than roundFirstValid");
-                if (roundLastValid - roundFirstValid > 10000) throw new Exception("You can create part keys max for 10000 rounds");
+                if (roundLastValid - roundFirstValid > 1000000) throw new Exception("You can create part keys max for 1000000 rounds");
                 System.Diagnostics.Process process = new();
                 System.Diagnostics.ProcessStartInfo startInfo = new()
                 {

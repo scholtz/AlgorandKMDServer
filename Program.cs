@@ -13,14 +13,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(
-#if !DEBUG
+
     c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "KMD service API",
         Version = "v1",
-        Description = File.ReadAllText("/kmd/doc/readme.md")
+        Description = File.ReadAllText("doc/readme.md")
     });
     c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
@@ -30,14 +30,13 @@ builder.Services.AddSwaggerGen(
         Type = SecuritySchemeType.ApiKey,
     });
 
-    var xmlFile = $"/kmd/doc/documentation.xml";
+    var xmlFile = $"doc/documentation.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.OperationFilter<Swashbuckle.AspNetCore.Filters.SecurityRequirementsOperationFilter>();
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     c.IncludeXmlComments(xmlPath);
 
 }
-#endif
     );
 
 bool.TryParse(builder.Configuration["algod:checkExpiration"], out var checkExpiration);
