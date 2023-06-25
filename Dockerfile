@@ -1,6 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM scholtz2/algorand-kmd-mainnet:3.9.4-stable AS algo
+ARG ALGO_BASE
+FROM scholtz2/algorand-kmd-mainnet:$ALGO_BASE AS algo
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-jammy AS build
 WORKDIR /src
@@ -15,7 +16,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0-jammy AS final
 ENV ALGORAND_DATA=/app/data
 USER root
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt update && apt dist-upgrade -y && apt install -y mc wget telnet git curl iotop atop vim && apt-get clean autoclean && apt-get autoremove dotnet6 --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
+RUN apt update && apt dist-upgrade -y && apt install -y mc wget telnet git curl net-tools iotop atop vim dnsutils jq iproute2 && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
 WORKDIR /app
 RUN mkdir /kmd
 RUN mkdir /node
