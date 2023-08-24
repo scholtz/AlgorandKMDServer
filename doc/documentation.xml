@@ -14,11 +14,24 @@
             Last run of the addpartkey method. This method is cpu sensitive and might cause DDOS if users are performing too fast requests.
             </summary>
         </member>
-        <member name="M:AlgorandKMDServer.Controllers.KMDController.#ctor(Microsoft.Extensions.Logging.ILogger{AlgorandKMDServer.Controllers.KMDController})">
+        <member name="M:AlgorandKMDServer.Controllers.KMDController.#ctor(Microsoft.Extensions.Logging.ILogger{AlgorandKMDServer.Controllers.KMDController},Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Constructor
             </summary>
-            <param name="logger"></param>
+            <param name="logger">DI logger</param>
+            <param name="configuration">DI configuration</param>
+        </member>
+        <member name="M:AlgorandKMDServer.Controllers.KMDController.GetRealm">
+            <summary>
+            Shows the configured account for this 2FA system
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AlgorandKMDServer.Controllers.KMDController.GetNetwork">
+            <summary>
+            Shows the configured account for this 2FA system
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:AlgorandKMDServer.Controllers.KMDController.Status">
             <summary>
@@ -36,6 +49,114 @@
             <param name="roundLastValid">Last valid round for participation</param>
             <param name="address"></param>
             <returns></returns>
+        </member>
+        <member name="T:AlgorandKMDServer.Controllers.VersionController">
+            <summary>
+            This controller returns version of the current api
+            </summary>
+        </member>
+        <member name="M:AlgorandKMDServer.Controllers.VersionController.Get">
+            <summary>
+            Returns version of the current api
+            
+            For development purposes it returns version of assembly, for production purposes it returns string build by pipeline which contains project information, pipeline build version, assembly version, and build date
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AlgorandKMDServer.Extension.HealthCheck">
+            <summary>
+            Check health status
+            </summary>
+        </member>
+        <member name="M:AlgorandKMDServer.Extension.HealthCheck.CheckHealthAsync(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckContext,System.Threading.CancellationToken)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AlgorandKMDServer.Extension.HealthWriteResponse">
+            <summary>
+            Health response
+            </summary>
+        </member>
+        <member name="M:AlgorandKMDServer.Extension.HealthWriteResponse.WriteResponse(Microsoft.AspNetCore.Http.HttpContext,Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="healthReport"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AlgorandKMDServer.Extension.TelemetryExtensions">
+            <summary>
+            Extensions to allow telemetry tracking
+            </summary>
+        </member>
+        <member name="M:AlgorandKMDServer.Extension.TelemetryExtensions.AddOpenTelemetryExtension(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Adds telemetry if configured in appsettings
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
+            <param name="serviceName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AlgorandKMDServer.Extension.VersionExtensions">
+            <summary>
+            Construct version data
+            </summary>
+        </member>
+        <member name="M:AlgorandKMDServer.Extension.VersionExtensions.GetVersion(System.String,System.DateTimeOffset,System.String,System.String)">
+            <summary>
+            Returns version object
+            </summary>
+            <param name="instanceId"></param>
+            <param name="start"></param>
+            <param name="dllVersion"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AlgorandKMDServer.Model.App">
+            <summary>
+            For version controller
+            </summary>
+        </member>
+        <member name="F:AlgorandKMDServer.Model.App.InstanceId">
+            <summary>
+            Identifies specific run of the application
+            </summary>
+        </member>
+        <member name="F:AlgorandKMDServer.Model.App.Started">
+            <summary>
+            Identifies specific run of the application
+            </summary>
+        </member>
+        <member name="T:AlgorandKMDServer.Model.DiagnosticsConfig">
+            <summary>
+            Diagnostics configuration
+            </summary>
+        </member>
+        <member name="F:AlgorandKMDServer.Model.DiagnosticsConfig.ServiceName">
+            <summary>
+            Service name
+            </summary>
+        </member>
+        <member name="F:AlgorandKMDServer.Model.DiagnosticsConfig.ActivitySource">
+            <summary>
+            Activity source
+            </summary>
+        </member>
+        <member name="F:AlgorandKMDServer.Model.DiagnosticsConfig.Meter">
+            <summary>
+            Meter
+            </summary>
+        </member>
+        <member name="F:AlgorandKMDServer.Model.DiagnosticsConfig.RequestCounter">
+            <summary>
+            Counter
+            </summary>
         </member>
         <member name="T:AlgorandKMDServer.Model.ParticipationKey">
             <summary>
@@ -110,6 +231,67 @@
         <member name="P:AlgorandKMDServer.Model.Status.AllKeysRoundsSum">
             <summary>
             Sum of last round minus first round of all keys
+            </summary>
+        </member>
+        <member name="T:AlgorandKMDServer.Model.Version">
+            <summary>
+            API version information
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.InstanceIdentifier">
+            <summary>
+            Instance identifier. Every application runtime has its own guid. If 3 pods are launched in kubernetes, it is possible to identify instance by this identifier
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.InstanceStartedAt">
+            <summary>
+            Last time when instance has been reset
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.ApplicationName">
+            <summary>
+            Application name
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.DockerImage">
+            <summary>
+            Full docker image with name and version
+            For example crm5g-service-settings:20211006.8
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.DockerImageVersion">
+            <summary>
+            Docker image version
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.BuildNumber">
+            <summary>
+            Build number from devops or github actions
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.DLLVersion">
+            <summary>
+            Application dll version
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.SourceVersion">
+            <summary>
+            Version of commit or changeset
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.BuildTime">
+            <summary>
+            Dll build time
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.Culture">
+            <summary>
+            Culture info
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.Version.Status">
+            <summary>
+            Status to validate functionality
             </summary>
         </member>
     </members>

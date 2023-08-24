@@ -3,7 +3,7 @@
 ARG ALGO_BASE
 FROM scholtz2/algorand-kmd-mainnet:$ALGO_BASE AS algo
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0-jammy AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0-jammy AS build
 WORKDIR /src
 COPY ["AlgorandKMDServer.csproj", "."]
 RUN dotnet restore "./AlgorandKMDServer.csproj"
@@ -42,4 +42,5 @@ RUN echo "cd /kmd/ && nohup dotnet AlgorandKMDServer.dll &\n$(cat /app/run.sh)" 
 WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:18888
 EXPOSE 18888
+COPY --from=build /src/version.json version.json
 ENTRYPOINT ["dotnet", "AlgorandKMDServer.dll"]

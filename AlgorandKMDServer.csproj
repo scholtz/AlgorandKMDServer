@@ -1,33 +1,46 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dcd5065e-4ebc-4259-a69f-c615a3c54125</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>.</DockerfileContext>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>doc/documentation.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>dcd5065e-4ebc-4259-a69f-c615a3c54125</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>.</DockerfileContext>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DocumentationFile>doc/documentation.xml</DocumentationFile>
+		<Deterministic>false</Deterministic>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Algorand2" Version="2.0.0.2023051112" />
-    <PackageReference Include="AlgorandAuthentication" Version="1.0.9" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-    <PackageReference Include="NLog" Version="5.2.3" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.8" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Algorand2" Version="2.0.0.2023051112" />
+		<PackageReference Include="AlgorandAuthentication" Version="1.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+		<PackageReference Include="NLog" Version="5.2.3" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.3" />
+		<PackageReference Include="OpenTelemetry" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.5.1-beta.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.5.1-beta.1" />
+		<PackageReference Include="prometheus-net.AspNetCore" Version="8.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.8" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="doc\documentation.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="doc\readme.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="doc\documentation.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="doc\readme.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

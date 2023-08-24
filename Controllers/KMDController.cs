@@ -22,6 +22,8 @@ namespace AlgorandKMDServer.Controllers
         private readonly ILogger<KMDController> _logger;
         private readonly int LockTime = 30;
         private readonly int MaximumRounds = 1000000;
+        private readonly string Realm = "";
+        private readonly string Network = "";
         /// <summary>
         /// Constructor
         /// </summary>
@@ -38,8 +40,29 @@ namespace AlgorandKMDServer.Controllers
             {
                 MaximumRounds = rounds;
             }
+            Realm = configuration["algod:realm"] ?? throw new Exception("Auth realm is not defined");
+            Network = configuration["algod:networkGenesisId"] ?? throw new Exception("Auth network is not defined");
+
         }
 
+        /// <summary>
+        /// Shows the configured account for this 2FA system
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetRealm")]
+        public ActionResult<string> GetRealm()
+        {
+            return Ok(Realm);
+        }
+        /// <summary>
+        /// Shows the configured account for this 2FA system
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetNetwork")]
+        public ActionResult<string> GetNetwork()
+        {
+            return Ok(Network);
+        }
         /// <summary>
         /// Show current kmd status
         /// </summary>
@@ -52,7 +75,7 @@ namespace AlgorandKMDServer.Controllers
         public ActionResult<Status> Status()
         {
 #if !DEBUG
-            if(LastStats != null && LastStats.Time.AddMinutes(10) > DateTimeOffset.Now)
+            if (LastStats != null && LastStats.Time.AddMinutes(10) > DateTimeOffset.Now)
             {
                 return LastStats;
             }

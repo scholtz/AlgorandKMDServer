@@ -1,6 +1,15 @@
+using Algorand.Indexer.Model;
 using AlgorandAuthentication;
+using AlgorandKMDServer.Extension;
+using AlgorandKMDServer.Model;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
+using Prometheus;
+using System.Reflection;
+
+[assembly: AssemblyVersionAttribute("1.0.*")]
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,8 +100,21 @@ else
     });
 }
 
+builder.Services.AddOpenTelemetryExtension(builder.Configuration, DiagnosticsConfig.ServiceName);
+builder.Services.AddHealthChecks().AddCheck<AlgorandKMDServer.Extension.HealthCheck>("participation-server");
+
 var app = builder.Build();
 
+var version = Assembly.GetExecutingAssembly()?.GetName()?.Version;
+if (version != null)
+{
+    Metrics.CreateGauge("BuildMajor", "version.Major").Set(Convert.ToDouble(version.Major));
+    Metrics.CreateGauge("BuildMinor", "version.Minor").Set(Convert.ToDouble(version.Minor));
+    Metrics.CreateGauge("BuildRevision", "version.Revision").Set(Convert.ToDouble(version.Revision));
+    Metrics.CreateGauge("BuildBuild", "version.Build").Set(Convert.ToDouble(version.Build));
+}
+
+app.UseMetricServer();
 
 app.UseCors();
 app.UseSwagger();
@@ -102,5 +124,16 @@ app.UseAuthorization();
 app.UseAuthentication();
 
 app.MapControllers();
+
+app.MapHealthChecks("/healthz", new HealthCheckOptions
+{
+    ResultStatusCodes =
+                    {
+                        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+                        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                    },
+    ResponseWriter = HealthWriteResponse.WriteResponse
+});
 
 app.Run();
