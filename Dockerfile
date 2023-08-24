@@ -12,7 +12,7 @@ WORKDIR "/src/."
 RUN dotnet build "AlgorandKMDServer.csproj" -c Release -o /app/build
 RUN dotnet publish "AlgorandKMDServer.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-jammy AS final
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-jammy AS final
 ENV ALGORAND_DATA=/app/data
 USER root
 ENV DEBIAN_FRONTEND noninteractive
