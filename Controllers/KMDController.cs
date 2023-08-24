@@ -20,13 +20,24 @@ namespace AlgorandKMDServer.Controllers
         private static DateTimeOffset LastRun = DateTimeOffset.Now;
         private static Status? LastStats = null;
         private readonly ILogger<KMDController> _logger;
+        private readonly int LockTime = 30;
+        private readonly int MaximumRounds = 1000000;
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="logger"></param>
-        public KMDController(ILogger<KMDController> logger)
+        /// <param name="logger">DI logger</param>
+        /// <param name="configuration">DI configuration</param>
+        public KMDController(ILogger<KMDController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            if (int.TryParse(configuration["LockTime"], out var time))
+            {
+                LockTime = time;
+            }
+            if (int.TryParse(configuration["MaximumRounds"], out var rounds))
+            {
+                MaximumRounds = rounds;
+            }
         }
 
         /// <summary>
@@ -126,23 +137,18 @@ namespace AlgorandKMDServer.Controllers
         {
             try
             {
-                if (address is null)
+                if (string.IsNullOrEmpty(address))
                 {
-                    throw new ArgumentNullException(nameof(address));
-                }
-                if (address != User?.Identity?.Name)
-                {
-                    throw new Exception("Invalid address. Must be the same as authorized one");
+                    address = User?.Identity?.Name ?? "";
                 }
                 //var address = User?.Identity?.Name;
-                string message = $"{DateTimeOffset.Now} addpartkey requested {address} {roundFirstValid} {roundLastValid}";
+                string message = $"{DateTimeOffset.Now} addpartkey requested {User?.Identity?.Name} {address} {roundFirstValid} {roundLastValid}";
                 _logger?.LogInformation(message);
-                if (LastRun.AddSeconds(10) > DateTimeOffset.Now)
+                if (LastRun.AddSeconds(LockTime) > DateTimeOffset.Now)
                 {
-                    //throw new Exception("Server is busy. Please try again in 10 seconds.");
+                    throw new Exception($"Server is busy. Please try again in {LockTime} seconds.");
                 }
                 LastRun = DateTimeOffset.Now;
-
                 if (string.IsNullOrEmpty(address))
                 {
                     throw new Exception("Invalid authentization");
@@ -152,8 +158,9 @@ namespace AlgorandKMDServer.Controllers
                 {
                     throw new Exception("Address is invalid");
                 }
+
                 if (roundLastValid <= roundFirstValid) throw new Exception("roundLastValid is lower than roundFirstValid");
-                if (roundLastValid - roundFirstValid > 1000000) throw new Exception("You can create part keys max for 1000000 rounds");
+                if (roundLastValid - roundFirstValid > MaximumRounds) throw new Exception($"You can create part keys max for {MaximumRounds} rounds");
                 System.Diagnostics.Process process = new();
                 System.Diagnostics.ProcessStartInfo startInfo = new()
                 {
