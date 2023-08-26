@@ -1,39 +1,56 @@
 ﻿using AlgorandKMDServer.Extension;
 using AlgorandKMDServer.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
 namespace AlgorandKMDServer.Controllers
 {
     /// <summary>
     /// This controller returns version of the current api
     /// </summary>
     [ApiController]
-    [Route("v1/version")]
+    [Route("v1")]
     public class VersionController : ControllerBase
     {
+        private readonly IOptionsMonitor<ParticipationConfiguration> participationConfiguration;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="participationConfiguration"></param>
+        public VersionController(IOptionsMonitor<ParticipationConfiguration> participationConfiguration)
+        {
+            this.participationConfiguration = participationConfiguration;
+        }
         /// <summary>
         /// Returns version of the current api
         /// 
         /// For development purposes it returns version of assembly, for production purposes it returns string build by pipeline which contains project information, pipeline build version, assembly version, and build date
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("version")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public ActionResult<Model.Version> Get()
+        public Model.Version Get()
         {
-            try
-            {
-                var ret = VersionExtensions.GetVersion(
-                    App.InstanceId,
-                    App.Started,
-                    GetType()?.Assembly?.GetName()?.Version?.ToString()
-                );
-                return Ok(ret);
-            }
-            catch (Exception exc)
-            {
-                return BadRequest(new ProblemDetails() { Detail = exc.Message + (exc.InnerException != null ? $";\n{exc.InnerException.Message}" : "") + "\n" + exc.StackTrace, Title = exc.Message, Type = exc.GetType().ToString() });
-            }
+            var ret = VersionExtensions.GetVersion(
+                App.InstanceId,
+                App.Started,
+                GetType()?.Assembly?.GetName()?.Version?.ToString()
+            );
+            return ret;
+        }
+        /// <summary>
+        /// Returns version of the current api
+        /// 
+        /// For development purposes it returns version of assembly, for production purposes it returns string build by pipeline which contains project information, pipeline build version, assembly version, and build date
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("config")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public ParticipationConfiguration GetConfig()
+        {
+            return participationConfiguration.CurrentValue;
         }
     }
 }

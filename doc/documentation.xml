@@ -14,12 +14,13 @@
             Last run of the addpartkey method. This method is cpu sensitive and might cause DDOS if users are performing too fast requests.
             </summary>
         </member>
-        <member name="M:AlgorandKMDServer.Controllers.KMDController.#ctor(Microsoft.Extensions.Logging.ILogger{AlgorandKMDServer.Controllers.KMDController},Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:AlgorandKMDServer.Controllers.KMDController.#ctor(Microsoft.Extensions.Logging.ILogger{AlgorandKMDServer.Controllers.KMDController},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptionsMonitor{AlgorandKMDServer.Model.ParticipationConfiguration})">
             <summary>
             Constructor
             </summary>
             <param name="logger">DI logger</param>
             <param name="configuration">DI configuration</param>
+            <param name="participationConfiguration">Participation configuration</param>
         </member>
         <member name="M:AlgorandKMDServer.Controllers.KMDController.GetRealm">
             <summary>
@@ -50,12 +51,39 @@
             <param name="address"></param>
             <returns></returns>
         </member>
+        <member name="T:AlgorandKMDServer.Controllers.ParticipationController">
+            <summary>
+            Better name for the service is participation server as kmd is used in different way
+            </summary>
+        </member>
+        <member name="M:AlgorandKMDServer.Controllers.ParticipationController.#ctor(Microsoft.Extensions.Logging.ILogger{AlgorandKMDServer.Controllers.KMDController},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptionsMonitor{AlgorandKMDServer.Model.ParticipationConfiguration})">
+            <summary>
+            constructor
+            </summary>
+            <param name="logger"></param>
+            <param name="configuration"></param>
+            <param name="participationConfiguration"></param>
+        </member>
         <member name="T:AlgorandKMDServer.Controllers.VersionController">
             <summary>
             This controller returns version of the current api
             </summary>
         </member>
+        <member name="M:AlgorandKMDServer.Controllers.VersionController.#ctor(Microsoft.Extensions.Options.IOptionsMonitor{AlgorandKMDServer.Model.ParticipationConfiguration})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="participationConfiguration"></param>
+        </member>
         <member name="M:AlgorandKMDServer.Controllers.VersionController.Get">
+            <summary>
+            Returns version of the current api
+            
+            For development purposes it returns version of assembly, for production purposes it returns string build by pipeline which contains project information, pipeline build version, assembly version, and build date
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AlgorandKMDServer.Controllers.VersionController.GetConfig">
             <summary>
             Returns version of the current api
             
@@ -156,6 +184,21 @@
         <member name="F:AlgorandKMDServer.Model.DiagnosticsConfig.RequestCounter">
             <summary>
             Counter
+            </summary>
+        </member>
+        <member name="T:AlgorandKMDServer.Model.ParticipationConfiguration">
+            <summary>
+            App configuration
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationConfiguration.LockTime">
+            <summary>
+            How much time is the app locked in order to create new participation keys. Prevention agains DDOS attacks
+            </summary>
+        </member>
+        <member name="P:AlgorandKMDServer.Model.ParticipationConfiguration.MaximumRounds">
+            <summary>
+            Maximum rounds
             </summary>
         </member>
         <member name="T:AlgorandKMDServer.Model.ParticipationKey">

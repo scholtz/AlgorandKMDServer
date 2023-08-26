@@ -2,6 +2,7 @@ using AlgorandAuthentication;
 using AlgorandKMDServer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace AlgorandKMDServer.Controllers
@@ -20,8 +21,7 @@ namespace AlgorandKMDServer.Controllers
         private static DateTimeOffset LastRun = DateTimeOffset.Now;
         private static Status? LastStats = null;
         private readonly ILogger<KMDController> _logger;
-        private readonly int LockTime = 30;
-        private readonly int MaximumRounds = 1000000;
+        private readonly IOptionsMonitor<ParticipationConfiguration> participationConfiguration;
         private readonly string Realm = "";
         private readonly string Network = "";
         /// <summary>
@@ -29,27 +29,19 @@ namespace AlgorandKMDServer.Controllers
         /// </summary>
         /// <param name="logger">DI logger</param>
         /// <param name="configuration">DI configuration</param>
-        public KMDController(ILogger<KMDController> logger, IConfiguration configuration)
+        /// <param name="participationConfiguration">Participation configuration</param>
+        public KMDController(ILogger<KMDController> logger, IConfiguration configuration, IOptionsMonitor<ParticipationConfiguration> participationConfiguration)
         {
             _logger = logger;
-            if (int.TryParse(configuration["LockTime"], out var time))
-            {
-                LockTime = time;
-            }
-            if (int.TryParse(configuration["MaximumRounds"], out var rounds))
-            {
-                MaximumRounds = rounds;
-            }
             Realm = configuration["algod:realm"] ?? throw new Exception("Auth realm is not defined");
             Network = configuration["algod:networkGenesisId"] ?? throw new Exception("Auth network is not defined");
-
+            this.participationConfiguration = participationConfiguration;
         }
-
         /// <summary>
         /// Shows the configured account for this 2FA system
         /// </summary>
         /// <returns></returns>
-        [HttpGet("GetRealm")]
+        [HttpGet("realm")]
         public ActionResult<string> GetRealm()
         {
             return Ok(Realm);
@@ -58,7 +50,7 @@ namespace AlgorandKMDServer.Controllers
         /// Shows the configured account for this 2FA system
         /// </summary>
         /// <returns></returns>
-        [HttpGet("GetNetwork")]
+        [HttpGet("network")]
         public ActionResult<string> GetNetwork()
         {
             return Ok(Network);
@@ -167,9 +159,9 @@ namespace AlgorandKMDServer.Controllers
                 //var address = User?.Identity?.Name;
                 string message = $"{DateTimeOffset.Now} addpartkey requested {User?.Identity?.Name} {address} {roundFirstValid} {roundLastValid}";
                 _logger?.LogInformation(message);
-                if (LastRun.AddSeconds(LockTime) > DateTimeOffset.Now)
+                if (LastRun.AddSeconds(participationConfiguration.CurrentValue.LockTime) > DateTimeOffset.Now)
                 {
-                    throw new Exception($"Server is busy. Please try again in {LockTime} seconds.");
+                    throw new Exception($"Server is busy. Please try again in {participationConfiguration.CurrentValue.LockTime} seconds.");
                 }
                 LastRun = DateTimeOffset.Now;
                 if (string.IsNullOrEmpty(address))
@@ -183,7 +175,7 @@ namespace AlgorandKMDServer.Controllers
                 }
 
                 if (roundLastValid <= roundFirstValid) throw new Exception("roundLastValid is lower than roundFirstValid");
-                if (roundLastValid - roundFirstValid > MaximumRounds) throw new Exception($"You can create part keys max for {MaximumRounds} rounds");
+                if (roundLastValid - roundFirstValid > participationConfiguration.CurrentValue.MaximumRounds) throw new Exception($"You can create part keys max for {participationConfiguration.CurrentValue.MaximumRounds} rounds");
                 System.Diagnostics.Process process = new();
                 System.Diagnostics.ProcessStartInfo startInfo = new()
                 {

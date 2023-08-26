@@ -3,6 +3,7 @@ using AlgorandAuthentication;
 using AlgorandKMDServer.Extension;
 using AlgorandKMDServer.Model;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
@@ -20,7 +21,7 @@ builder.Host.UseNLog();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddProblemDetails();
 builder.Services.AddSwaggerGen(
 
     c =>
@@ -66,6 +67,9 @@ builder.Services
        o.NetworkGenesisHash = builder.Configuration["algod:networkGenesisHash"];
        o.Debug = debug;
    });
+
+
+builder.Services.Configure<ParticipationConfiguration>(builder.Configuration.GetSection($"ParticipationServer"));
 
 
 var corsConfig = builder.Configuration.GetSection("Cors").AsEnumerable().Select(k => k.Value).Where(k => !string.IsNullOrEmpty(k)).ToArray();
