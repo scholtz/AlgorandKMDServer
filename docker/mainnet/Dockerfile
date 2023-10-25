@@ -28,15 +28,8 @@ WORKDIR /kmd
 COPY --from=build /app/publish /kmd
 ENV PATH=/node:$PATH
 
-# /app/run-participation-mainnet.sh
-RUN echo "#!/bin/bash\nsed -i s~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~\$algodtoken~g /kmd/appsettings.json\ncd /kmd/ && nohup dotnet AlgorandKMDServer.dll &\n$(cat /app/run-participation-mainnet.sh)" > /app/run-participation-mainnet.sh
-# /app/run-kmd.sh
-RUN echo "#!/bin/bash\nsed -i s~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~\$algodtoken~g /kmd/appsettings.json\ncd /kmd/ && nohup dotnet AlgorandKMDServer.dll &\n$(cat /app/run-kmd.sh)" > /app/run-kmd.sh
-# /app/run.sh
-RUN echo "#!/bin/bash\nsed -i s~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~\$algodtoken~g /kmd/appsettings.json\ncd /kmd/ && nohup dotnet AlgorandKMDServer.dll &\n$(cat /app/run.sh)" > /app/run.sh
-
 WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:18888
 EXPOSE 18888
 ADD docker/mainnet/version.json version.json
-ENTRYPOINT ["/bin/bash", "/app/run-participation-mainnet.sh"]
+ENTRYPOINT ["/bin/bash", "/app/run-participation-mainnet-with-appsettings.sh"]

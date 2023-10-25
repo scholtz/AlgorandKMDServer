@@ -1,7 +1,7 @@
-ver=3.18.0
+ver=3.19.0
 image=$ver-stable
 Application="algorand-participation-server"
-dockerImage="scholtz2/algorand-kmd-mainnet-extended"
+dockerImage="scholtz2/algorand-participation-voitest-extended"
 version=$image
 
 gitVer=`git rev-parse HEAD`
@@ -9,17 +9,16 @@ gitVer=`git rev-parse HEAD`
 echo "{\"applicationName\":\"$Application\",\"buildNumber\":\"$ver\",\"dllVersion\":\"\",\"buildTime\":\"$time\",\"sourceVersion\":\"$gitVer\",\"dockerImage\":\"$dockerImage:$version\",\"dockerImageVersion\":\"$version\"}"> "version.json" 
 cat "version.json" 
 
-docker build -t scholtz2/algorand-kmd-mainnet-extended:$image -f Dockerfile --progress=plain --build-arg ALGO_VER=$ver --build-arg ALGO_BASE=$image . || error_code=$?
+docker build -t $dockerImage:$image -f Dockerfile --progress=plain --build-arg ALGO_VER=$ver --build-arg ALGO_BASE=$image ../../ || error_code=$?
 error_code_int=$(($error_code + 0))
 if [ $error_code_int -ne 0 ]; then
     echo "failed to build";
 	exit 1;
 fi
-
-docker push scholtz2/algorand-kmd-mainnet-extended:$ver-stable || error_code=$?
+echo "docker push $dockerImage:$image"
+docker push $dockerImage:$image || error_code=$?
 error_code_int=$(($error_code + 0))
 if [ $error_code_int -ne 0 ]; then
-    echo "failed to build";
+    echo "failed to push $dockerImage:$image";
 	exit 1;
 fi
-
