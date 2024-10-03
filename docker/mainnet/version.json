@@ -1,1 +1,1 @@
-{"applicationName":"algorand-participation-server","buildNumber":"3.26.0","dllVersion":"","buildTime":"","sourceVersion":"f438cd1b5b3de8d9cf7a79f58a5862cdee9e7a88","dockerImage":"scholtz2/algorand-kmd-mainnet-extended:3.26.0-stable","dockerImageVersion":"3.26.0-stable"}
+{"applicationName":"algorand-participation-server","buildNumber":"3.26.0","dllVersion":"","buildTime":"","sourceVersion":"26fe680dcf2a9134c6b944c68bd3862bd37c0bc2","dockerImage":"scholtz2/algorand-kmd-mainnet-extended:3.26.0-stable","dockerImageVersion":"3.26.0-stable"}
