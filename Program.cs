@@ -1,5 +1,6 @@
 using Algorand.Indexer.Model;
 using AlgorandAuthentication;
+using AlgorandKMDServer.Controllers;
 using AlgorandKMDServer.Extension;
 using AlgorandKMDServer.Model;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -72,7 +73,7 @@ builder.Services
 builder.Services.Configure<ParticipationConfiguration>(builder.Configuration.GetSection($"ParticipationServer"));
 
 
-var corsConfig = builder.Configuration.GetSection("Cors").AsEnumerable().Select(k => k.Value).Where(k => !string.IsNullOrEmpty(k)).ToArray();
+var corsConfig = builder.Configuration.GetSection("Cors").AsEnumerable().Select(k => k.Value).Where(k => !string.IsNullOrEmpty(k)).Select(k=>k ?? "").ToArray();
 Console.WriteLine($"CORS setup: {string.Join(", ", corsConfig)}");
 if (corsConfig.Length > 0)
 {
@@ -81,7 +82,7 @@ if (corsConfig.Length > 0)
         options.AddDefaultPolicy(
         builder =>
         {
-            builder.WithOrigins(corsConfig)
+            builder.WithOrigins(corsConfig ?? [])
                 .SetIsOriginAllowedToAllowWildcardSubdomains()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
@@ -139,5 +140,8 @@ app.MapHealthChecks("/healthz", new HealthCheckOptions
                     },
     ResponseWriter = HealthWriteResponse.WriteResponse
 });
+
+app.Logger.LogInformation($"ParticipationController.LastRun: {ParticipationController.LastRun}");
+app.Logger.LogInformation($"KMDController.LastRun: {KMDController.LastRun}");
 
 app.Run();

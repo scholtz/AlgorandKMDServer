@@ -1,5 +1,7 @@
-﻿using AlgorandKMDServer.Extension;
+﻿using AlgorandAuthentication;
+using AlgorandKMDServer.Extension;
 using AlgorandKMDServer.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -51,6 +53,18 @@ namespace AlgorandKMDServer.Controllers
         public ParticipationConfiguration GetConfig()
         {
             return participationConfiguration.CurrentValue;
+        }
+        /// <summary>
+        /// Use this method to test authentication of the ARC14 token
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("test-authentication")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [Authorize(AuthenticationSchemes = AlgorandAuthenticationHandler.ID)]
+        public string? TestAuth()
+        {
+            return User.Identity?.Name;
         }
     }
 }

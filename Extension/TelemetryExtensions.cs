@@ -39,7 +39,7 @@ namespace AlgorandKMDServer.Extension
                         .AddHttpClientInstrumentation()
                         .AddAspNetCoreInstrumentation();
                     // Use IConfiguration binding for AspNetCore instrumentation options.
-                    services.Configure<AspNetCoreInstrumentationOptions>(configuration.GetSection("AspNetCoreInstrumentation"));
+                    services.Configure<OpenTelemetry.Instrumentation.AspNetCore.AspNetCoreTraceInstrumentationOptions>(configuration.GetSection("AspNetCoreInstrumentation"));
                     switch (tracingExporter)
                     {
                         case "jaeger":

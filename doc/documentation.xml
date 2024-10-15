@@ -91,6 +91,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:AlgorandKMDServer.Controllers.VersionController.TestAuth">
+            <summary>
+            Use this method to test authentication of the ARC14 token
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:AlgorandKMDServer.Extension.HealthCheck">
             <summary>
             Check health status

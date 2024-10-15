@@ -18,7 +18,7 @@ namespace AlgorandKMDServer.Controllers
         /// <summary>
         /// Last run of the addpartkey method. This method is cpu sensitive and might cause DDOS if users are performing too fast requests.
         /// </summary>
-        private static DateTimeOffset LastRun = DateTimeOffset.Now;
+        public static DateTimeOffset LastRun = DateTimeOffset.Now;
         private static Status? LastStats = null;
         private readonly ILogger<KMDController> _logger;
         private readonly IOptionsMonitor<ParticipationConfiguration> participationConfiguration;
