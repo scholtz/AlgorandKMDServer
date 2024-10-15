@@ -17,10 +17,11 @@ ENV ALGORAND_DATA=/app/data
 USER root
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update && apt dist-upgrade -y && apt install -y bc mc wget telnet git curl net-tools iotop atop vim dnsutils jq iproute2 && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
-RUN useradd -ms /bin/bash algo -d /app
+RUN useradd -ms /bin/bash algo -u 1000 -d /app
 WORKDIR /app
 RUN mkdir /kmd && mkdir /node && mkdir /app/data && mkdir /app/mainnet
 RUN chown algo:algo /app -R &&  chown algo:algo /node -R && chown algo:algo /kmd -R
+
 WORKDIR /app
 COPY --from=algo /app .
 COPY --from=algo /node /node
