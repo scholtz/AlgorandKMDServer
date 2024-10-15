@@ -3,7 +3,7 @@
 ARG ALGO_BASE
 FROM scholtz2/algorand-kmd-mainnet:$ALGO_BASE AS algo
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0-jammy AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
 WORKDIR /src
 COPY ["AlgorandKMDServer.csproj", "."]
 RUN dotnet restore "./AlgorandKMDServer.csproj"
@@ -12,7 +12,7 @@ WORKDIR "/src/."
 RUN dotnet build "AlgorandKMDServer.csproj" -c Release -o /app/build
 RUN dotnet publish "AlgorandKMDServer.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-jammy AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy AS final
 ENV ALGORAND_DATA=/app/data
 USER root
 ENV DEBIAN_FRONTEND noninteractive
