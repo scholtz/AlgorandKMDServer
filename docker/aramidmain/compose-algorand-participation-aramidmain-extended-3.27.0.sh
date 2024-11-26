@@ -1,7 +1,7 @@
-ver=3.26.0
+ver=3.27.0
 image=$ver-stable
 Application="algorand-participation-server"
-dockerImage="scholtz2/algorand-participation-voimain-extended"
+dockerImage="scholtz2/algorand-participation-aramidmain-extended"
 version=$image
 
 gitVer=`git rev-parse HEAD`
